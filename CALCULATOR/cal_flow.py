@@ -130,3 +130,60 @@ Function call
    ↓
 Result
 """
+
+""" V_2
+
+
+v_1
+↓
+history 
+↓
+clear screen function
+↓
+pause funciton
+↓
+numbering History
+↓
+input handelling
+↓
+UI
+↓
+Test
+"""
+
+"""Q.
+
+mereko agge badne s pehele yeh batao ki , jabh humne clear or pause ki code krii toh humhe wo def krna padha , 
+but history code krne m humhe wo nhi krna padha 
+- 1. pause , clear ek reusable function hai , brr brr use hote h . 
+2. history ek list/variable hai . not a function.
+3. history.append    is a built in method , python knows it before .
+"""
+
+"""v3
+Tkinter/PyQt jaise GUI framework introduce
+Calculator window
+Display/screen
+Number buttons
++ - × ÷
+= button
+Clear button
+Keyboard input
+History panel
+Basic GUI styling
+Mouse + keyboard interaction
+V3 calculator logic ko GUI se connect karna
+"""
+
+"""v4
+
+Architecture
+Core Calculator
+UI/UX
+Professional UI
+Scientific Calculator
+Advanced Features
+Professional Development
+
+layout → spacing → typography → buttons → colors → themes → interactions → animations → usability
+"""
