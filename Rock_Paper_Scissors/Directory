@@ -1,0 +1,109 @@
+"""
+Understand → Design → Build → Test → Debug → Improve → GitHub
+
+Project Development Workflow
+
+1. Project Selection
+
+You tell me the project.
+I’ll define the goal and expected final features.
+
+2. Requirements
+
+What the project should do.
+Inputs.
+Outputs.
+Features.
+What is not needed initially.
+
+3. Technology Selection
+I’ll tell you exactly:
+
+Python or another language
+Libraries/packages
+APIs
+Database
+Framework, if required
+Why each technology is being used
+
+4. Environment Setup
+In VS Code:
+
+Folder structure
+Files to create
+Python environment/venv
+Package installation
+Git initialization
+
+5. Architecture
+Before coding, we’ll decide:
+
+User
+ ↓
+Interface
+ ↓
+Application Logic
+ ↓
+Database / API / Files
+ ↓
+Output
+
+For larger projects, we’ll break this into modules.
+
+6. Build From Scratch
+We build feature-by-feature.
+
+For each step I’ll give you:
+
+What to build
+Which file to modify
+What concept you need
+Code when appropriate
+How the code works
+How to test it
+
+You will type/write the code in VS Code.
+
+7. Debugging
+When you get an error:
+
+You send me the error/code/screenshot.
+I identify the problem.
+Explain why it happened.
+Give the correction.
+Tell you how to prevent it next time.
+
+8. Git & GitHub
+We’ll use Git properly:
+
+git init
+git status
+git add
+git commit
+git push
+
+We’ll also create:
+
+README.md
+.gitignore
+proper project structure
+meaningful commits
+
+9. Testing
+We'll test:
+
+normal inputs
+wrong inputs
+edge cases
+unexpected situations
+
+10. Improve the Project
+After the basic version works:
+
+V1 → V2 → V3
+
+We’ll add better features, cleaner architecture, error handling, performance improvements, etc.
+
+11. Final GitHub Project
+The final repository should look like a real software project, not just a Python practice file.
+"""
