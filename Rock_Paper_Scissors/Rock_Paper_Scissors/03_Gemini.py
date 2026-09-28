@@ -227,7 +227,7 @@ class RPSApp(tk.Tk):
             f"Ties: {s['ties']}\n\n"
             "Thanks for playing!"
         )
-        messagebox.showinfo("Final Results", summary)
+        messagebox.showinfo("Final  Results", summary)
         self.destroy()
 
 

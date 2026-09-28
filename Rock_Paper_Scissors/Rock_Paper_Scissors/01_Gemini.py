@@ -22,7 +22,7 @@ ASCII_ART = {
       (_____)
       (____)
 ---.__(___)
-""",
+""" ,
     'paper': """
     _______
 ---'   ____)____
@@ -80,7 +80,7 @@ class RockPaperScissorsEngine:
 
 
 def print_banner():
-    print(f"{Colors.HEADER}{Colors.BOLD}")
+    print(f"{Colors.HEADER} {Colors.BOLD}")
     print("==========================================")
     print("   ROCK  •  PAPER  •  SCISSORS : ULTIMATE ")
     print("==========================================")

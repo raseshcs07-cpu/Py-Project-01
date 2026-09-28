@@ -10,7 +10,7 @@ def get_user_choice():
             return choices[user_input]
         if user_input in choices.values():
             return user_input
-        print("Invalid choice. Please enter r, p, s, or q.")
+        print("Invalid choice. Please enter r, p, s, or q. ")
 
 def determine_winner(user, computer):
     if user == computer:
