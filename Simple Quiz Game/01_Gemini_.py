@@ -330,6 +330,8 @@ class QuizGame:
         self.display_leaderboard()
 
 
+
+
 if __name__ == "__main__":
     game = QuizGame()
     game.play()
