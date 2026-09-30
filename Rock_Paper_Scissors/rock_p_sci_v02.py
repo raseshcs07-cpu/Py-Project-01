@@ -1,8 +1,8 @@
-
 import time 
 import random 
 import os 
 import sys
+
 
 # ==================== ASCII ART ====================
 
@@ -128,6 +128,7 @@ best_streak = 0
 # ==================== MAIN GAME ====================
 
 round_number = 1 
+game_id = random.randint(1000, 9999)
 
 while True :
 
@@ -164,7 +165,7 @@ while True :
        win_streak += 1
 
        if win_streak > best_streak:
-          best_streak = win_streak
+            best_streak = win_streak
 
        print("\nDisplaying Score.....")
        win_sound()
@@ -183,7 +184,8 @@ while True :
 
     print("\n╔══════════════════════════════════════╗")
     print("║              SCOREBOARD📊           ║")
-    print("║                                      ║")
+    print(f"║     🎮 Game ID: {game_id}                 ║")
+    # print("║                                      ║")
     print(f"║     You: {user_score}   Computer: {computer_score}   Ties: {ties}  ║")
     print(f"║     🔥 Win Streak: {win_streak}                 ║")
     print(f"║     🔥 Best Streak: {best_streak}              ║")
@@ -193,7 +195,7 @@ while True :
 #          print("\n🏁 Target score reached!")
 #          break
 
-
+    quit_game = False
     while True:
 
      continue_game = input(
