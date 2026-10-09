@@ -503,7 +503,6 @@ def main():
         else:
             print("\n✗ Invalid choice. Please try again.")
 
-            
 # def main():
 
 #     while True:
