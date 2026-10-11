@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Ultimate Unit Converter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}html{background:#000}
+body{margin:0;background:#000;color:#e8e8f0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background-image:radial-gradient(600px 300px at 10% -5%,#7c3aed33,transparent),radial-gradient(600px 300px at 95% 0,#06b6d422,transparent)}
+.w{max-width:980px;margin:auto;padding:22px 14px 60px}
+h1{font-size:clamp(26px,5vw,42px);margin:6px 0 2px;background:linear-gradient(90deg,#a78bfa,#22d3ee,#34d399,#fbbf24,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px}
+.sub{color:#8a8aa0;margin:0 0 18px}
+nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px}
+nav button{flex:none;background:#0d0d14;color:#b8b8cc;border:1px solid #23232f;border-radius:99px;padding:8px 15px;cursor:pointer;font:inherit;transition:.2s}
+nav button:hover{border-color:var(--c);color:#fff}
+nav button.on{background:var(--c);color:#000;font-weight:700;border-color:var(--c);box-shadow:0 0 22px -4px var(--c)}
+.p{display:none;background:#09090f;border:1px solid #1d1d2a;border-radius:20px;padding:20px;animation:f .3s}
+.p.on{display:block}@keyframes f{from{opacity:0;transform:translateY(6px)}}
+label{display:block;font-size:12px;color:#8a8aa0;margin:0 0 4px;text-transform:uppercase;letter-spacing:.08em}
+input,select{width:100%;background:#000;color:#fff;border:1px solid #2a2a3a;border-radius:12px;padding:11px 12px;font:inherit;outline:0}
+input:focus,select:focus{border-color:var(--c,#a78bfa);box-shadow:0 0 0 3px #a78bfa22}
+.g{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));align-items:end}
+.btn{background:linear-gradient(135deg,var(--c,#a78bfa),#22d3ee);color:#000;border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer}
+.btn.o{background:#000;color:#fff;border:1px solid #2a2a3a}.btn:hover{filter:brightness(1.15)}
+.res{margin-top:16px;padding:18px;border-radius:16px;background:linear-gradient(135deg,#7c3aed22,#06b6d422);border:1px solid #2c2c44}
+.big{font-size:clamp(24px,5vw,38px);font-weight:800;color:#67e8f9;word-break:break-all}
+.mut{color:#8a8aa0;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:#0f0f18;border:1px solid #26263a;border-radius:10px;padding:7px 12px;cursor:pointer;color:#ddd;font:inherit;font-size:13px}
+.chip:hover,.chip.on{border-color:var(--c);color:var(--c)}
+.cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin-top:14px}
+.cd{background:#000;border:1px solid #23233a;border-radius:12px;padding:10px 12px}.cd b{color:#fbbf24;display:block;word-break:break-all}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid #1a1a28}th{color:#8a8aa0;font-size:12px;text-transform:uppercase}
+tr.r:hover td{background:#12121c;cursor:pointer}.sc{overflow-x:auto}
+.d{margin-top:12px;border:1px solid #2a2a44;border-radius:16px;padding:14px;background:#000}
+.d div{padding:4px 0;display:flex;gap:10px;flex-wrap:wrap}.d span{color:#8a8aa0;min-width:140px}.d em{font-style:normal;color:#34d399}
+.q{font-size:18px;font-weight:600;margin:10px 0}.opt{display:block;width:100%;text-align:left;margin:8px 0}
+.ok{border-color:#34d399!important;color:#34d399}.no{border-color:#f87171!important;color:#f87171}
+.hi{padding:8px 0;border-bottom:1px solid #1a1a28}
+</style></head><body><div class="w">
+<h1>Ultimate Unit Converter</h1><p class="sub">30 categories · physics units &amp; dimensions · quiz · history</p>
+<nav id="nav"></nav>
+<section class="p" id="convert"></section><section class="p" id="quick"></section><section class="p" id="popular"></section>
+<section class="p" id="height"></section><section class="p" id="finder"></section><section class="p" id="browse"></section>
+<section class="p" id="dimcalc"></section><section class="p" id="quiz"></section><section class="p" id="history"></section><section class="p" id="help"></section>
+<p class="mut" style="margin-top:16px">Precision (significant digits): <input id="prec" type="number" min="1" max="15" value="6" style="width:80px;display:inline-block;padding:5px 8px"></p>
+</div>
+<script>
+const $=s=>document.querySelector(s),R=a=>a[Math.floor(Math.random()*a.length)];
+let P=6,H=[];
+const AL={feet:"ft",inches:"in",lbs:"lb",kilo:"kg",kilos:"kg",kmph:"km/h",kph:"km/h",kmh:"km/h",metre:"m",metres:"m",litre:"l",litres:"l",sec:"s",secs:"s",mins:"min",hr:"h",hrs:"h",tonne:"t",ton:"t",tonnes:"t",centigrade:"c"};
+const RAW=[["Length","Meter","nm:Nanometer:1e-9,um:Micrometer:1e-6,angstrom:Angstrom:1e-10,mm:Millimeter:.001,cm:Centimeter:.01,m:Meter:1,km:Kilometer:1000,in:Inch:.0254,ft:Foot:.3048,yd:Yard:.9144,mi:Mile:1609.344,nmi:Nautical Mile:1852,au:Astronomical Unit:1.495978707e11,ly:Light Year:9.4607304725808e15,pc:Parsec:3.0856775814914e16"],
+["Mass","Kilogram","amu:Atomic Mass Unit:1.6605390666e-27,ug:Microgram:1e-9,mg:Milligram:1e-6,g:Gram:.001,kg:Kilogram:1,quintal:Quintal:100,t:Metric Tonne:1000,carat:Carat:.0002,tola:Tola:.01166375,grain:Grain:6.479891e-5,oz:Ounce:.028349523125,lb:Pound:.45359237,st:Stone:6.35029318,slug:Slug:14.5939029,shortton:Short Ton (US):907.18474,longton:Long Ton (UK):1016.0469088"],
+["Temperature","Celsius","c:Celsius:0,f:Fahrenheit:0,k:Kelvin:0,r:Rankine:0"],
+["Area","Square Meter","mm2:Square Millimeter:1e-6,cm2:Square Centimeter:1e-4,m2:Square Meter:1,km2:Square Kilometer:1e6,in2:Square Inch:6.4516e-4,ft2:Square Foot:.09290304,yd2:Square Yard:.83612736,mi2:Square Mile:2589988.110336,acre:Acre:4046.8564224,ha:Hectare:10000"],
+["Volume","Liter","mm3:Cubic Millimeter:1e-6,ml:Milliliter:.001,cm3:Cubic Centimeter:.001,l:Liter:1,m3:Cubic Meter:1000,in3:Cubic Inch:.016387064,ft3:Cubic Foot:28.316846592,tsp:Teaspoon (US):.00492892,tbsp:Tablespoon (US):.0147868,floz:Fluid Ounce (US):.0295735296,cup:Cup (US):.236588,pt:Pint (US):.473176,qt:Quart (US):.946353,gal:Gallon (US):3.78541,ukgal:Gallon (UK):4.54609,bbl:Oil Barrel:158.987294928"],
+["Time","Second","ns:Nanosecond:1e-9,us:Microsecond:1e-6,ms:Millisecond:.001,s:Second:1,min:Minute:60,h:Hour:3600,day:Day:86400,week:Week:604800,month:Month (30 days):2592000,year:Year (365 days):31536000,decade:Decade:315360000,century:Century:3153600000"],
+["Speed","Meter/second","cm/s:Centimeter per second:.01,m/s:Meter per second:1,km/h:Kilometer per hour:.2777777778,mph:Miles per hour:.44704,ft/s:Feet per second:.3048,knot:Knot:.5144444444,mach:Mach (sea level):343,light:Speed of Light:299792458"],
+["Acceleration","Meter/second^2","m/s2:Meter per second squared:1,cm/s2:Gal (cm/s2):.01,ft/s2:Foot per second squared:.3048,g0:Standard Gravity (g):9.80665"],
+["Force","Newton","dyne:Dyne:1e-5,gf:Gram-force:.00980665,n:Newton:1,kn:Kilonewton:1000,kgf:Kilogram-force:9.80665,lbf:Pound-force:4.4482216152605,ozf:Ounce-force:.278013851,tf:Tonne-force:9806.65"],
+["Pressure","Pascal","barye:Barye (dyne/cm2):.1,pa:Pascal:1,hpa:Hectopascal:100,mbar:Millibar:100,kpa:Kilopascal:1000,bar:Bar:100000,mpa:Megapascal:1e6,atm:Atmosphere:101325,torr:Torr:133.322368,mmhg:Millimeter of Mercury:133.322387415,psi:Pound per sq inch:6894.757293168,kgf/cm2:Kilogram-force per sq cm:98066.5"],
+["Energy / Work / Heat","Joule","ev:Electron Volt:1.602176634e-19,mev:Mega Electron Volt:1.602176634e-13,erg:Erg:1e-7,j:Joule:1,kj:Kilojoule:1000,mj:Megajoule:1e6,cal:Calorie:4.184,kcal:Kilocalorie:4184,wh:Watt-hour:3600,kwh:Kilowatt-hour:3600000,btu:British Thermal Unit:1055.05585262,ftlb:Foot-pound:1.3558179483314"],
+["Power","Watt","erg/s:Erg per second:1e-7,mw:Milliwatt:.001,w:Watt:1,kw:Kilowatt:1000,megaw:Megawatt:1e6,gw:Gigawatt:1e9,hp:Horsepower (mechanical):745.69987158227,ps:Horsepower (metric):735.49875,btu/h:BTU per hour:.29307107"],
+["Torque","Newton-meter","dyne-cm:Dyne-centimeter:1e-7,n-m:Newton-meter:1,kn-m:Kilonewton-meter:1000,kgf-m:Kilogram-force meter:9.80665,lbf-ft:Pound-force foot:1.3558179483314,lbf-in:Pound-force inch:.1129848290276"],
+["Density","kg/m^3","kg/m3:Kilogram per cubic meter:1,g/l:Gram per liter:1,g/cm3:Gram per cubic cm:1000,g/ml:Gram per milliliter:1000,kg/l:Kilogram per liter:1000,lb/ft3:Pound per cubic foot:16.01846337,lb/in3:Pound per cubic inch:27679.9047,lb/gal:Pound per gallon (US):119.826427"],
+["Viscosity","Pascal-second","pa-s:Pascal-second:1,mpa-s:Millipascal-second:.001,poise:Poise:.1,cp:Centipoise:.001,lb/ft-s:Pound per foot-second:1.4881639"],
+["Frequency","Hertz","hz:Hertz:1,khz:Kilohertz:1e3,mhz:Megahertz:1e6,ghz:Gigahertz:1e9,rpm:Revolutions per minute:.0166666667"],
+["Angular Velocity","Radian/second","rad/s:Radian per second:1,deg/s:Degree per second:.0174532925,rpm:Revolutions per minute:.1047197551,rps:Revolutions per second:6.2831853072"],
+["Angle","Degree","arcsec:Arcsecond:2.7777777778e-4,arcmin:Arcminute:.0166666667,deg:Degree:1,rad:Radian:57.295779513,grad:Gradian:.9,turn:Full Turn:360"],
+["Digital Storage","Byte","bit:Bit:.125,byte:Byte:1,kb:Kilobyte:1024,mb:Megabyte:1048576,gb:Gigabyte:1073741824,tb:Terabyte:1099511627776,pb:Petabyte:1125899906842624"],
+["Fuel Efficiency","km/liter","km/l:Kilometer per liter:1,mi/l:Mile per liter:1.609344,mpg:Miles per Gallon (US):.425143707,mpg-uk:Miles per Gallon (UK):.35400619"],
+["Electric Charge","Coulomb","e:Elementary Charge:1.602176634e-19,statc:Statcoulomb (esu):3.33564e-10,nc:Nanocoulomb:1e-9,uc:Microcoulomb:1e-6,mc:Millicoulomb:1e-3,c:Coulomb:1,mah:Milliampere-hour:3.6,ah:Ampere-hour:3600,faraday:Faraday:96485.33212"],
+["Electric Current","Ampere","na:Nanoampere:1e-9,ua:Microampere:1e-6,ma:Milliampere:1e-3,a:Ampere:1,ka:Kiloampere:1e3"],
+["Voltage","Volt","statv:Statvolt:299.792458,uv:Microvolt:1e-6,mv:Millivolt:1e-3,v:Volt:1,kv:Kilovolt:1e3,megav:Megavolt:1e6"],
+["Resistance","Ohm","mohm:Milliohm:1e-3,ohm:Ohm:1,kohm:Kilohm:1e3,megohm:Megohm:1e6"],
+["Capacitance","Farad","pf:Picofarad:1e-12,nf:Nanofarad:1e-9,uf:Microfarad:1e-6,mf:Millifarad:1e-3,f:Farad:1"],
+["Inductance","Henry","nh:Nanohenry:1e-9,uh:Microhenry:1e-6,mh:Millihenry:1e-3,h:Henry:1"],
+["Magnetic Field (B)","Tesla","nt:Nanotesla:1e-9,ut:Microtesla:1e-6,gs:Gauss:1e-4,mt:Millitesla:1e-3,t:Tesla:1"],
+["Magnetic Flux","Weber","mx:Maxwell:1e-8,uwb:Microweber:1e-6,mwb:Milliweber:1e-3,wb:Weber:1"],
+["Radioactivity","Becquerel","dpm:Disintegrations per minute:.0166666667,dps:Disintegrations per second:1,bq:Becquerel:1,kbq:Kilobecquerel:1e3,mbq:Megabecquerel:1e6,uci:Microcurie:3.7e4,mci:Millicurie:3.7e7,ci:Curie:3.7e10"],
+["Radiation Dose","Gray","ugy:Microgray:1e-6,mgy:Milligray:1e-3,gy:Gray:1,rd:Rad (dose):.01,erg/g:Erg per gram:1e-4"]];
+const CATS=RAW.map(([n,b,s])=>({n,b,u:s.split(",").map(x=>{const a=x.split(":");return{s:a[0],n:a[1],f:+a[2]}})}));
+const find=(c,t)=>{t=t.trim().toLowerCase();const cand=[t];if(t.endsWith("s"))cand.push(t.slice(0,-1));if(t.endsWith("es"))cand.push(t.slice(0,-2));
+for(const w of cand){let u=c.u.find(x=>x.s==w);if(u)return u.s;u=c.u.find(x=>x.n.split("(")[0].trim().toLowerCase()==w);if(u)return u.s;if(AL[w]&&c.u.find(x=>x.s==AL[w]))return AL[w]}return null};
+const toC=(v,u)=>u=="c"?v:u=="f"?(v-32)*5/9:u=="k"?v-273.15:(v-491.67)*5/9;
+const fromC=(v,u)=>u=="c"?v:u=="f"?v*9/5+32:u=="k"?v+273.15:(v+273.15)*9/5;
+const U=(c,s)=>c.u.find(x=>x.s==s);
+function conv(c,v,a,b){if(c.n=="Temperature"){const k=toC(v,a);if(k<-273.15)throw Error("Temperature is below absolute zero!");return fromC(k,b)}return v*U(c,a).f/U(c,b).f}
+function fmt(x){if(x==0)return"0";const a=Math.abs(x);if(a>=1e-6&&a<1e12){const e=Math.floor(Math.log10(a)),d=Math.min(Math.max(P-1-e,0),100);let t=x.toFixed(d);if(t.includes("."))t=t.replace(/0+$/,"").replace(/\.$/,"");return t}return x.toExponential(P-1).replace(/\.?0+e/,"e")}
+function pair(a,b){for(const c of CATS){const x=find(c,a),y=find(c,b);if(x&&y)return[c,x,y]}return[]}
+function record(c,v,a,b){const r=conv(c,v,a,b),t=`${fmt(v)} ${a} = ${fmt(r)} ${b}   [${c.n}]`;H.push(t);renderHist();return{r,t}}
+const resBox=(c,v,a,b)=>{try{const{r}=record(c,v,a,b);return`<div class="res"><div class="mut">${fmt(v)} ${U(c,a).n} =</div><div class="big">${fmt(r)} ${b}</div><div class="mut">${U(c,a).n} → ${U(c,b).n} · ${c.n}</div></div>`}catch(e){return`<div class="res no">${e.message}</div>`}};
+const opts=(c,sel)=>c.u.map(u=>`<option value="${u.s}"${u.s==sel?" selected":""}>${u.s} — ${u.n}</option>`).join("");
+// ---------- tabs ----------
+const TABS=[["convert","Convert","#a78bfa"],["quick","Quick","#22d3ee"],["popular","Popular","#34d399"],["height","Height","#fbbf24"],["finder","Physics Finder","#f472b6"],["browse","Browse","#fb923c"],["dimcalc","Dimension Calc","#60a5fa"],["quiz","Quiz","#f87171"],["history","History","#c084fc"],["help","Instructions","#38bdf8"]];
+$("#nav").innerHTML=TABS.map(t=>`<button data-t="${t[0]}" style="--c:${t[2]}">${t[1]}</button>`).join("");
+function go(id){TABS.forEach(t=>{const on=t[0]==id;$("#"+t[0]).classList.toggle("on",on);$("#"+t[0]).style.setProperty("--c",t[2]);$(`[data-t=${t[0]}]`).classList.toggle("on",on)})}
+$("#nav").onclick=e=>{const t=e.target.dataset.t;if(t)go(t)};
+$("#prec").oninput=e=>{P=Math.min(15,Math.max(1,+e.target.value||6))};
+// ---------- 1 convert ----------
+$("#convert").innerHTML=`<div class="g"><div><label>Category</label><select id="cc">${CATS.map((c,i)=>`<option value="${i}">${c.n}</option>`).join("")}</select></div><div><label>Value</label><input id="cv" type="number" value="1" step="any"></div></div>
+<div class="g" style="margin-top:12px;grid-template-columns:1fr auto 1fr"><div><label>From</label><select id="cf"></select></div><button class="btn o" id="cs" title="swap">⇄</button><div><label>To</label><select id="ct"></select></div></div>
+<div id="cr"></div><div style="margin-top:12px"><button class="btn" id="ca">Convert to ALL units</button></div><div id="cx"></div>`;
+const cat=()=>CATS[+$("#cc").value];
+function fill(){const c=cat();$("#cf").innerHTML=opts(c,c.u[Math.min(5,c.u.length-1)].s);$("#ct").innerHTML=opts(c,c.u[Math.min(6,c.u.length-1)].s);$("#cx").innerHTML="";run()}
+function run(){const v=parseFloat($("#cv").value);$("#cr").innerHTML=isNaN(v)?"":resBox(cat(),v,$("#cf").value,$("#ct").value)}
+$("#cc").onchange=fill;["cv","cf","ct"].forEach(i=>$("#"+i).oninput=run);
+$("#cs").onclick=()=>{const a=$("#cf").value;$("#cf").value=$("#ct").value;$("#ct").value=a;run()};
+$("#ca").onclick=()=>{const c=cat(),v=parseFloat($("#cv").value),a=$("#cf").value;if(isNaN(v))return;try{$("#cx").innerHTML=`<div class="cards">${c.u.filter(u=>u.s!=a).map(u=>`<div class="cd"><b>${fmt(conv(c,v,a,u.s))} ${u.s}</b><span class="mut">${u.n}</span></div>`).join("")}</div>`;H.push(`${fmt(v)} ${a} converted to all ${c.n} units`);renderHist()}catch(e){$("#cx").innerHTML=`<div class="res no">${e.message}</div>`}};
+fill();
+// ---------- 2 quick ----------
+$("#quick").innerHTML=`<label>Type like: 5 feet to inches</label><div class="g" style="grid-template-columns:1fr auto"><input id="qi" placeholder="150 lb to kg"><button class="btn" id="qb">Convert</button></div>
+<div class="chips">${["5 feet to inches","150 lb to kg","100 c to f","2 gb to mb","60 mph to km/h","1 acre to ha"].map(x=>`<button class="chip">${x}</button>`).join("")}</div><div id="qr"></div>`;
+function quick(){const p=$("#qi").value.trim().toLowerCase().split(" to ");const bad=m=>$("#qr").innerHTML=`<div class="res no">${m}</div>`;
+if(p.length!=2)return bad("Format: &lt;value&gt; &lt;unit&gt; to &lt;unit&gt;");const m=p[0].trim().match(/^(\S+)\s+(.+)$/);if(!m)return bad("Format: &lt;value&gt; &lt;unit&gt; to &lt;unit&gt;");const v=parseFloat(m[1]);if(isNaN(v))return bad("First part must be a number.");
+const[c,a,b]=pair(m[2],p[1]);if(!c)return bad("Units unknown or from different categories.");$("#qr").innerHTML=resBox(c,v,a,b)}
+$("#qb").onclick=quick;$("#qi").onkeydown=e=>e.key=="Enter"&&quick();
+$("#quick").querySelector(".chips").onclick=e=>{if(e.target.className=="chip"){$("#qi").value=e.target.textContent;quick()}};
+// ---------- 3 popular ----------
+const POP="Pounds to Kilograms|lb|kg,Kilograms to Pounds|kg|lb,Feet to Inches|ft|in,Inches to Feet|in|ft,Inches to Centimeters|in|cm,Centimeters to Inches|cm|in,Meters to Feet|m|ft,Feet to Meters|ft|m,Kilometers to Miles|km|mi,Miles to Kilometers|mi|km,Celsius to Fahrenheit|c|f,Fahrenheit to Celsius|f|c,Celsius to Kelvin|c|k,Liters to Gallons|l|gal,Gallons to Liters|gal|l,Ounces to Grams|oz|g,Grams to Ounces|g|oz,Stone to Kilograms|st|kg,km/h to mph|km/h|mph,mph to km/h|mph|km/h,Hours to Minutes|h|min,Days to Hours|day|h,MB to GB|mb|gb,GB to MB|gb|mb,Degrees to Radians|deg|rad,Radians to Degrees|rad|deg,Acres to Hectares|acre|ha,Atmosphere to Pascal|atm|pa,Newton to Dyne|n|dyne,kcal to kJ|kcal|kj,Horsepower to Kilowatt|hp|kw,eV to Joule|ev|j".split(",").map(x=>x.split("|"));
+let pi=0;$("#popular").innerHTML=`<div class="chips">${POP.map((p,i)=>`<button class="chip${i?"":" on"}" data-i="${i}">${p[0]}</button>`).join("")}</div><label>Value</label><input id="pv" type="number" value="1" step="any"><div id="pr"></div>`;
+function pop(){const[,a,b]=POP[pi],[c,x,y]=pair(a,b),v=parseFloat($("#pv").value);$("#pr").innerHTML=isNaN(v)?"":resBox(c,v,x,y)}
+$("#popular").querySelector(".chips").onclick=e=>{if(e.target.dataset.i){pi=+e.target.dataset.i;e.currentTarget.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c==e.target));pop()}};$("#pv").oninput=pop;pop();
+// ---------- 4 height ----------
+$("#height").innerHTML=`<div class="g"><div><label>Feet</label><input id="hf" type="number" value="5"></div><div><label>Inches</label><input id="hi" type="number" value="9"></div></div><div id="hr1"></div>
+<div class="g" style="margin-top:20px"><div><label>Centimeters</label><input id="hc" type="number" value="175"></div></div><div id="hr2"></div>`;
+function h1(){const f=+$("#hf").value||0,i=+$("#hi").value||0,cm=(f*12+i)*2.54;$("#hr1").innerHTML=`<div class="res"><div class="mut">${f} ft ${i} in =</div><div class="big">${fmt(cm)} cm · ${fmt(cm/100)} m</div></div>`}
+function h2(){const cm=+$("#hc").value||0,t=cm/2.54,f=Math.floor(t/12);$("#hr2").innerHTML=`<div class="res"><div class="mut">${fmt(cm)} cm =</div><div class="big">${f} ft ${fmt(t-f*12)} in</div></div>`}
+["hf","hi"].forEach(i=>$("#"+i).oninput=h1);$("#hc").oninput=h2;h1();h2();
+// ---------- physics data ----------
+const TOP=["Base Quantities (SI)","Mechanics","Properties of Matter","Heat & Thermodynamics","Electricity","Magnetism & EMI","Waves & Optics","Modern Physics"];
+const PD=`Length~distance~displacement~height~width~radius|l|meter|m|L1|Distance between two points|0|centimeter (cm)
+Mass|m|kilogram|kg|M1|Amount of matter in a body|0|gram (g)
+Time~duration|t|second|s|T1|Duration between two events|0|second (s)
+Electric current~current|I|ampere|A|A1|I = q / t|0|abampere
+Temperature|T|kelvin|K|K1|T(K) = T(C) + 273.15|0|kelvin (K)
+Amount of substance|n|mole|mol|mol1|n = N / N_A|0|mole
+Luminous intensity|I_v|candela|cd|cd1|Light power per unit solid angle|0|candela
+Area|A|square meter|m^2|L2|A = l x b|1|cm^2
+Volume|V|cubic meter|m^3|L3|V = l x b x h|1|cm^3
+Velocity~speed|v|meter per second|m/s|L1T-1|v = displacement / time|1|cm/s
+Acceleration|a|meter per second squared|m/s^2|L1T-2|a = change in v / t|1|gal
+Momentum|p|kilogram meter per second|kg m/s|M1L1T-1|p = m v|1|g cm/s
+Force~weight~thrust|F|newton|N|M1L1T-2|F = m a|1|dyne
+Impulse|J|newton second|N s|M1L1T-1|Impulse = F t = change in p|1|dyne s
+Work|W|joule|J|M1L2T-2|W = F d cos(theta)|1|erg
+Energy~kinetic energy~potential energy|E|joule|J|M1L2T-2|KE = 1/2 m v^2 ; PE = m g h|1|erg
+Power|P|watt|W|M1L2T-3|P = W / t|1|erg/s
+Torque~moment of force|tau|newton meter|N m|M1L2T-2|tau = r x F|1|dyne cm
+Moment of inertia|I|kilogram square meter|kg m^2|M1L2|I = m r^2|1|g cm^2
+Angular velocity~angular frequency|omega|radian per second|rad/s|T-1|omega = angle / time|1|rad/s
+Angular acceleration|alpha|radian per second squared|rad/s^2|T-2|alpha = change in omega / t|1|rad/s^2
+Angular momentum|L|kilogram square meter per second|kg m^2/s|M1L2T-1|L = I omega = r x p|1|g cm^2/s
+Density|rho|kilogram per cubic meter|kg/m^3|M1L-3|rho = m / V|1|g/cm^3
+Spring constant~force constant|k|newton per meter|N/m|M1T-2|F = k x|1|dyne/cm
+Gravitational constant|G|newton meter squared per kg squared|N m^2/kg^2|M-1L3T-2|F = G m1 m2 / r^2|1|dyne cm^2/g^2
+Gravitational potential|V_g|joule per kilogram|J/kg|L2T-2|V = -GM / r|1|erg/g
+Plane angle|theta|radian|rad||theta = arc / radius|1|degree
+Solid angle|omega|steradian|sr||omega = area / r^2|1|-
+Pressure|P|pascal|Pa|M1L-1T-2|P = F / A|2|barye
+Stress|sigma|pascal|Pa|M1L-1T-2|Stress = F / A|2|dyne/cm^2
+Strain|epsilon|no unit|-||Strain = change in L / L|2|-
+Young's modulus~modulus of elasticity|Y|pascal|Pa|M1L-1T-2|Y = stress / strain|2|dyne/cm^2
+Bulk modulus|B|pascal|Pa|M1L-1T-2|B = -P / (dV/V)|2|dyne/cm^2
+Modulus of rigidity~shear modulus|eta|pascal|Pa|M1L-1T-2|shear stress / shear strain|2|dyne/cm^2
+Surface tension|S|newton per meter|N/m|M1T-2|S = F / l|2|dyne/cm
+Surface energy|-|joule per square meter|J/m^2|M1T-2|Energy / area|2|erg/cm^2
+Coefficient of viscosity~viscosity|eta|pascal second|Pa s|M1L-1T-1|F = eta A (dv/dx)|2|poise
+Heat~thermal energy|Q|joule|J|M1L2T-2|Q = m c dT|3|calorie
+Heat capacity|C|joule per kelvin|J/K|M1L2T-2K-1|C = Q / dT|3|cal/C
+Specific heat capacity~specific heat|c|joule per kilogram kelvin|J/(kg K)|L2T-2K-1|c = Q / (m dT)|3|cal/(g C)
+Latent heat|L|joule per kilogram|J/kg|L2T-2|L = Q / m|3|cal/g
+Thermal conductivity|K|watt per meter kelvin|W/(m K)|M1L1T-3K-1|Q/t = K A dT / d|3|cal/(s cm C)
+Entropy|S|joule per kelvin|J/K|M1L2T-2K-1|dS = Q / T|3|erg/K
+Universal gas constant~gas constant|R|joule per mole kelvin|J/(mol K)|M1L2T-2K-1mol-1|PV = nRT|3|erg/(mol K)
+Boltzmann constant|k_B|joule per kelvin|J/K|M1L2T-2K-1|E = k_B T|3|erg/K
+Coefficient of linear expansion|alpha|per kelvin|K^-1|K-1|alpha = dL / (L dT)|3|C^-1
+Stefan-Boltzmann constant|sigma|watt per sq meter per K^4|W/(m^2 K^4)|M1T-3K-4|P = sigma A T^4|3|erg/(s cm^2 K^4)
+Electric charge~charge|q|coulomb|C|A1T1|q = I t|4|statcoulomb
+Potential difference~voltage~potential~electric potential|V|volt|V|M1L2T-3A-1|V = W / q|4|statvolt
+Electromotive force~emf|emf|volt|V|M1L2T-3A-1|emf = -d(flux)/dt|4|statvolt
+Resistance|R|ohm|ohm|M1L2T-3A-2|R = V / I|4|statohm
+Impedance~reactance|Z|ohm|ohm|M1L2T-3A-2|Z = V_rms / I_rms|4|statohm
+Resistivity~specific resistance|rho|ohm meter|ohm m|M1L3T-3A-2|R = rho l / A|4|ohm cm
+Conductance~mho|G|siemens|S|M-1L-2T3A2|G = 1 / R|4|-
+Electrical conductivity|sigma|siemens per meter|S/m|M-1L-3T3A2|sigma = 1 / rho|4|-
+Capacitance|C|farad|F|M-1L-2T4A2|C = q / V|4|statfarad
+Electric field~electric field intensity|E|volt per meter|V/m|M1L1T-3A-1|E = F / q|4|dyne/statC
+Electric flux|phi_E|volt meter|V m|M1L3T-3A-1|phi = E A cos(theta)|4|-
+Permittivity of free space~permittivity|eps_0|farad per meter|F/m|M-1L-3T4A2|F = q1 q2 / (4 pi eps_0 r^2)|4|-
+Electric dipole moment~dipole moment|p|coulomb meter|C m|L1T1A1|p = q x 2a|4|statC cm
+Current density|J|ampere per square meter|A/m^2|L-2A1|J = I / A|4|-
+Magnetic field~magnetic flux density~magnetic induction|B|tesla|T|M1T-2A-1|F = q v B sin(theta)|5|gauss (G)
+Magnetic flux|phi_B|weber|Wb|M1L2T-2A-1|phi = B A cos(theta)|5|maxwell
+Inductance~self inductance~mutual inductance|L|henry|H|M1L2T-2A-2|emf = -L dI/dt|5|abhenry
+Permeability of free space~permeability|mu_0|henry per meter|H/m|M1L1T-2A-2|B = mu_0 I / (2 pi r)|5|-
+Magnetic dipole moment|m|ampere square meter|A m^2|L2A1|m = N I A|5|erg/gauss
+Magnetic intensity~magnetising field|H|ampere per meter|A/m|L-1A1|H = B / mu|5|oersted
+Frequency|f|hertz|Hz|T-1|f = 1 / T|6|hertz
+Wavelength|lambda|meter|m|L1|v = f lambda|6|angstrom / cm
+Wave number|k|per meter|m^-1|L-1|k = 1 / lambda|6|cm^-1
+Intensity of wave~intensity|I|watt per square meter|W/m^2|M1T-3|I = Power / Area|6|erg/(s cm^2)
+Power of lens|P|dioptre|D|L-1|P = 1 / f|6|-
+Refractive index|n|no unit|-||n = c / v|6|-
+Luminous flux|phi_v|lumen|lm|cd1|Light power seen by the eye|6|-
+Illuminance|E_v|lux|lx|L-2cd1|E = flux / area|6|phot
+Planck's constant~planck|h|joule second|J s|M1L2T-1|E = h f|7|erg s
+Work function|phi_0|joule (or eV)|J|M1L2T-2|KE_max = h f - phi_0|7|erg
+Radioactivity~activity|A|becquerel|Bq|T-1|A = lambda N|7|curie
+Decay constant|lambda|per second|s^-1|T-1|N = N0 e^(-lambda t)|7|s^-1
+Absorbed dose|D|gray|Gy|L2T-2|D = energy / mass|7|rad
+Rydberg constant|R_H|per meter|m^-1|L-1|1/lambda = R(1/n1^2 - 1/n2^2)|7|cm^-1`;
+const SY=["M","L","T","A","K","mol","cd"],ORD=["M","L","T","A","K","mol","cd"];
+const parseD=s=>{const a=[0,0,0,0,0,0,0];for(const m of s.matchAll(/(mol|cd|[MLTAK])(-?\d+)/g))a[ORD.indexOf(m[1])]=+m[2];return a};
+const dS=a=>"["+a.map((p,i)=>i<3||p?SY[i]+"^"+p:"").filter(Boolean).join(" ")+"]";
+const Q=PD.split("\n").map(l=>{const f=l.split("|"),n=f[0].split("~");return{name:n[0],al:n.slice(1),sym:f[1],un:f[2],us:f[3],d:parseD(f[4]),f:f[5],t:+f[6],cgs:f[7]}});
+const same=(a,b)=>a.join()==b.join(),norm=t=>t.toLowerCase().replace(/'/g,"").replace(/[?,]/g," ").replace(/\s+/g," ").trim();
+const FILL=new Set("what is the unit units of dimension dimensions dimensional formula formulas si for a an in tell me about find give its are cgs show".split(" "));
+function search(t){const tk=norm(t).split(" ").filter(Boolean);let k=tk.filter(w=>!FILL.has(w));if(!k.length)k=tk;const q=k.join(" ");if(!q)return[];
+const ex=[],pa=[];for(const x of Q){const names=[x.name,...x.al].map(norm),uk=[norm(x.un),norm(x.us)];if(names.includes(q)||uk.includes(q))ex.push(x);else if(names.concat(uk[0]).some(n=>k.every(w=>n.includes(w))))pa.push(x)}return ex.length?ex:pa}
+const ul=x=>x.us=="-"?"no unit":`${x.un} (${x.us})`;
+const det=x=>{const s=Q.filter(o=>o!==x&&same(o.d,x.d)).map(o=>o.name);return`<div class="d"><div style="font-size:20px;color:#f472b6;font-weight:700">${x.name} <span class="mut" style="min-width:0">(symbol: ${x.sym})</span></div><div><span>SI unit</span><em>${ul(x)}</em></div><div><span>Dimensional formula</span><em>${dS(x.d)}</em></div><div><span>CGS unit</span>${x.cgs}</div><div><span>Formula / Meaning</span>${x.f}</div><div><span>Topic</span>${TOP[x.t]}</div>${s.length?`<div><span>Same dimensions as</span>${s.join(", ")}</div>`:""}</div>`};
+const tbl=a=>`<div class="sc"><table><tr><th>Quantity</th><th>SI unit</th><th>Dimension</th></tr>${a.map(x=>`<tr class="r" data-n="${x.name}"><td>${x.name}</td><td>${x.us}</td><td>${dS(x.d)}</td></tr>`).join("")}</table></div>`;
+// ---------- 5 finder ----------
+$("#finder").innerHTML=`<label>Ask: force | unit of torque | N | joule | dimension of power</label><input id="fi" placeholder="Search a physics quantity..."><div id="fr"></div>`;
+function fnd(){const t=$("#fi").value,r=t.trim()?search(t):[];$("#fr").innerHTML=!t.trim()?"":!r.length?`<div class="res no">Not found. Try another name or browse topics.</div>`:r.length<=3?r.map(det).join(""):`<p class="mut">${r.length} matches — click one:</p>`+tbl(r)}
+$("#fi").oninput=fnd;$("#fr").onclick=e=>{const tr=e.target.closest("tr.r");if(tr){$("#fi").value=tr.dataset.n;fnd()}};
+function openQ(n){go("finder");$("#fi").value=n;fnd()}
+// ---------- 6 browse ----------
+$("#browse").innerHTML=`<div class="chips">${TOP.map((t,i)=>`<button class="chip${i?"":" on"}" data-i="${i}">${t}</button>`).join("")}<button class="chip" data-i="8">Show EVERYTHING</button></div><div id="br"></div><p class="mut">Click any row for full details, CGS unit and formula.</p>`;
+function brw(i){$("#br").innerHTML=i==8?TOP.map((t,j)=>`<h3 style="color:#fb923c">${t}</h3>`+tbl(Q.filter(x=>x.t==j))).join(""):tbl(Q.filter(x=>x.t==i))}
+$("#browse").querySelector(".chips").onclick=e=>{if(e.target.dataset.i){e.currentTarget.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c==e.target));brw(+e.target.dataset.i)}};
+$("#br").onclick=e=>{const tr=e.target.closest("tr.r");if(tr)openQ(tr.dataset.n)};brw(0);
+// ---------- 7 dimension calc ----------
+$("#dimcalc").innerHTML=`<datalist id="dl">${Q.map(x=>`<option value="${x.name}">`).join("")}</datalist><p class="mut">Multiply or divide two quantities. Example: Force × Length = [M^1 L^2 T^-2] (Work / Energy)</p>
+<div class="g" style="grid-template-columns:1fr 90px 1fr"><div><label>First</label><input id="d1" list="dl" value="Force"></div><div><label>Op</label><select id="do"><option>×</option><option>÷</option></select></div><div><label>Second</label><input id="d2" list="dl" value="Length"></div></div><div id="dr"></div>`;
+function dc(){const a=search($("#d1").value)[0],b=search($("#d2").value)[0];if(!a||!b){$("#dr").innerHTML=`<div class="res no">Quantity not found.</div>`;return}
+const m=$("#do").value=="×"?1:-1,ans=a.d.map((p,i)=>p+m*b.d[i]),mt=Q.filter(x=>same(x.d,ans)).map(x=>x.name);
+$("#dr").innerHTML=`<div class="res"><div class="mut">${a.name} ${dS(a.d)} ${$("#do").value} ${b.name} ${dS(b.d)}</div><div class="big">${dS(ans)}</div><div class="mut">${mt.length?"Belongs to: "+mt.join(", "):"No quantity in our list has this dimension."}</div></div>`}
+["d1","d2","do"].forEach(i=>$("#"+i).oninput=dc);dc();
+// ---------- 8 quiz ----------
+let qz={n:0,s:0,t:5,cur:null};
+function quizStart(){qz={n:0,s:0,t:+$("#qn").value||5,cur:null};nextQ()}
+$("#quiz").innerHTML=`<div class="g" style="grid-template-columns:120px auto"><div><label>Questions</label><input id="qn" type="number" min="1" max="20" value="5"></div><div><button class="btn" id="qs">Start Quiz</button></div></div><div id="qa"></div>`;
+$("#qs").onclick=quizStart;
+function nextQ(){if(qz.n>=qz.t){const p=qz.s*100/qz.t;$("#qa").innerHTML=`<div class="res"><div class="big">${qz.s} / ${qz.t}</div><div class="mut">${p==100?"Perfect! You really know your units!":p>=60?"Good job! Keep practising.":"Revise from the Browse tab and try again."}</div></div>`;return}
+const pool=Q.filter(x=>x.us!="-"),q=R(pool),isU=Math.random()<.5;let corr,wr;
+if(isU){corr=ul(q);wr=[...new Set(pool.map(ul))]}else{corr=dS(q.d);wr=[...new Set(Q.map(x=>dS(x.d)))]}
+wr=wr.filter(x=>x!=corr).sort(()=>Math.random()-.5).slice(0,3);const o=[...wr,corr].sort(()=>Math.random()-.5);qz.n++;qz.cur=corr;
+$("#qa").innerHTML=`<p class="mut">Question ${qz.n} / ${qz.t} · Score ${qz.s}</p><div class="q">${isU?"SI unit of":"Dimensional formula of"} <span style="color:#f87171">${q.name}</span>?</div>${o.map(x=>`<button class="chip opt">${x}</button>`).join("")}`}
+$("#qa").onclick=e=>{if(!e.target.classList.contains("opt")||qz.lock)return;qz.lock=1;const ok=e.target.textContent==qz.cur;if(ok)qz.s++;e.target.classList.add(ok?"ok":"no");
+if(!ok)[...document.querySelectorAll(".opt")].find(b=>b.textContent==qz.cur).classList.add("ok");setTimeout(()=>{qz.lock=0;nextQ()},900)};
+// ---------- 9 history ----------
+function renderHist(){$("#history").innerHTML=`<div class="chips"><button class="btn o" id="hcl">Clear</button><button class="btn" id="hsv">Save as .txt</button></div>`+(H.length?H.map((h,i)=>`<div class="hi"><span class="mut">${i+1}.</span> ${h}</div>`).join(""):`<p class="mut">No history yet.</p>`);
+$("#hcl").onclick=()=>{H=[];renderHist()};$("#hsv").onclick=()=>{if(!H.length)return;const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([H.join("\n")],{type:"text/plain"}));a.download="conversion_history.txt";a.click()}}
+const HELP=[["convert","Convert","#a78bfa","Pick a category (Length, Mass, Force...), type a value, then choose From and To units. The result updates live as you type. Use ⇄ to swap units, and 'Convert to ALL units' to see the value in every unit of that category."],["quick","Quick","#22d3ee","Type one line like '5 feet to inches', '150 lb to kg' or '100 c to f' and press Enter. You can use symbols (km) or names (kilometer, feet, inches)."],["popular","Popular","#34d399","Tap one of 32 common conversions (lb to kg, ft to in, C to F...), enter your value, and the answer appears instantly."],["height","Height","#fbbf24","Enter feet and inches to get cm and meters, or enter centimeters to get feet and inches."],["finder","Physics Finder","#f472b6","Search any physics quantity or unit: 'force', 'unit of torque', 'N', 'joule', 'dimension of power'. You get the SI unit, dimensional formula, CGS unit, formula, and other quantities with the same dimensions. If many results match, click one to open its details."],["browse","Browse","#fb923c","Pick a topic (Mechanics, Electricity, Modern Physics...) to see all its quantities with units and dimensions. Click any row for full details."],["dimcalc","Dimension Calc","#60a5fa","Choose two quantities and × or ÷. You get the resulting dimension and which quantity it matches. Example: Force × Length = Work / Energy."],["quiz","Quiz","#f87171","Choose how many questions (1-20), press Start, and pick the right option for SI units and dimensional formulas. Your score is shown at the end."],["history","History","#c084fc","Every conversion is saved here during your session. You can clear it or download it as a .txt file."]];
+$("#help").innerHTML=`<h2 style="margin:0 0 4px;color:#38bdf8">How to use</h2><p class="mut">Each tab does one job. Tap a card to open that tab.</p><div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${HELP.map(h=>`<div class="cd" data-go="${h[0]}" style="cursor:pointer;border-color:${h[2]}55"><b style="color:${h[2]};font-size:16px">${h[1]}</b><span style="color:#cfcfe0;font-size:14px">${h[3]}</span></div>`).join("")}</div><div class="d" style="margin-top:16px"><div style="color:#fbbf24;font-weight:700">Tips</div><div>• Precision (bottom of the page) sets significant digits, 1 to 15.</div><div>• Temperature below absolute zero (-273.15 C) shows an error.</div><div>• In Digital Storage, 1 KB = 1024 bytes.</div><div>• Units must be from the same category (you can't convert kg to meters).</div></div>`;
+$("#help").onclick=e=>{const c=e.target.closest("[data-go]");if(c)go(c.dataset.go)};
+renderHist();go("convert");
+</script></body></html>
