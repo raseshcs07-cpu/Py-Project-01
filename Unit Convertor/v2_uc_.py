@@ -617,15 +617,15 @@ class Dimension:
 
 
     def same_as(self, other):
-        return self.powers == other.power
+        return self.powers == other.powers
 
 
     def multiply(self, other):
-        return Dimension(*[a + b for a, b in zip(self.powers, other.power)])
+        return Dimension(*[a + b for a, b in zip(self.powers, other.powers)])
 
 
     def divide(self, other):
-        return Dimension(*[a - b for a,b in zip(self.powers , other.power)])
+        return Dimension(*[a - b for a,b in zip(self.powers , other.powers)])
 
 
 
