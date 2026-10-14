@@ -193,6 +193,7 @@ class ConverterLibrary:
         return None, None, None
 
     def load_all(self):
+
         # ---------------- LENGTH ----------------
         self.add("Length", "Meter", {
             "nm": ("Nanometer", 1e-9),
@@ -533,7 +534,6 @@ class ConverterLibrary:
             "rd": ("Rad (dose)", 0.01),
             "erg/g": ("Erg per gram", 1e-4),
         })
-
 
 # =====================================================================
 #  PART 2 :  PHYSICS UNITS & DIMENSIONS  (11th / 12th syllabus)
