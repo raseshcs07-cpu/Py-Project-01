@@ -631,3 +631,140 @@ class Dimension:
 
 class PhysicalQuantity:
     """One physical quantity with its unit, dimension and formula."""
+
+    def __init__(self, name, symbol, unit_name, unit_symbol, base_form, 
+                 dimension, formula, topic, cgs="-", aliases=None):
+        self.name = name
+        self.symbol = symbol
+        self.unit_name = unit_name
+        self.unit_symbol = unit_symbol
+        self.base_form = base_form          # unit written in SI base units
+        self.dimension = dimension          # Dimension object
+        self.formula = formula
+        self.topic = topic
+        self.cgs = cgs
+        self.aliases = aliases if aliases else []
+
+
+    def unit_label(self):
+        if self.unit_symbol == "-":
+            return "no unit"
+        return f"{self.unit_name} ({self.unit_symbol})"
+
+
+
+class PhysicsLibrary:
+    """Database of physical quantities + search + dimension tools."""
+
+    def __init__(self):
+
+
+    def clean_query(self,text):
+
+
+    def search(self,text):
+
+
+    def find_one(self, text):
+
+
+    def by_topic(self, topic):
+
+
+    def with_dimension(self, dimension, exclude= None):
+
+
+    def show_details(self, q):
+
+
+    def show_table(self, quantities):
+
+
+    def load_data(self):
+
+
+
+class History;
+
+    def __init__(self):
+
+
+    def add(self,text);
+
+
+    def show(self):
+
+
+    def clear(self):
+
+
+    def save_to_file(self, filname = "converison_history.txt"):
+
+
+
+
+class PhysicsQuiz:
+
+    def __init__(self, library):
+
+
+    def run(self):
+
+
+
+class UnitConvertorApp:
+
+    def __init__(self):;
+
+
+    def format_number(self, number):
+
+
+    def get_number(self,message):
+
+
+    def choose_unit(self, convertor, message):
+
+
+    def do_converion(self, converter, value, from_unit, to_unit);
+
+
+    def quick_convert(self):
+
+
+    def popular_convert(self):
+
+
+    def convert_to_all(self):
+
+
+    def height_converter(self):
+
+
+    def fund_quantity(self):
+
+
+    def browse_topics(self):
+
+
+    def dimension_calculator(self):
+
+
+    def show_all_units(self):
+
+
+    def history_menu(self):
+
+
+    def change_precision(self):
+
+
+    def show_menu(self):
+
+
+    def run(self):
+
+
+if __name__ = "__main__"
+    app = UnitConverterApp()
+    app.run()
