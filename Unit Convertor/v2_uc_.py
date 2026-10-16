@@ -657,21 +657,62 @@ class PhysicsLibrary:
     """Database of physical quantities + search + dimension tools."""
 
     def __init__(self):
+        self.quantities = []
+        self.load_data()
+
+
+    def add (self, *args, **kwargs):
+        self.quantities.append(PhysicalQuantity(*args, **kwargs))
 
 
     def clean_query(self,text):
 
+        tokens = normalize(text).split()
+        kept = [word for word in tokens if word not in FILLER_WORDS]
+        if not kept:
+            kept = tokens
+        return " ".join(kept)
+
 
     def search(self,text):
 
+        query = self.clean_query(text)
+        if query == "":
+            return []
+
+        exact =[]
+        partial = []
+        for q in self.quantities:
+            names = [normalize(q.name)] + [normalize(a) for a in q.aliases]
+            unit_keys = [normalize(q.unit_name), normalize(q.unit_symbol)]
+
+            if query in names or query in unit_keys:
+                exact.append(q)
+            else:
+                words = query.split()
+                for name in names + [unit_keys[0]]:
+                    if all(word in name for word in words):
+                        partial.append(q)
+                        break
+
+        return exact if exact else partial
+
 
     def find_one(self, text):
+        results = self.search(text)
+        if results:
+            return results[0]
+        return None
 
 
     def by_topic(self, topic):
+        return [q for q in self.quantities if q.topic == topic]
+
 
 
     def with_dimension(self, dimension, exclude= None):
+        return [q for q in self.quantities
+            if q is not exclude and q.dimension.same_as(dimension)]
 
 
     def show_details(self, q):
