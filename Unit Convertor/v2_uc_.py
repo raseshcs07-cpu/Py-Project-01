@@ -716,6 +716,19 @@ class PhysicsLibrary:
 
 
     def show_details(self, q):
+        print("\n  " + "=" * 58)
+        print(f"  Quantity          : {q.name}   (symbol: {q.symbol})")
+        print(f"  SI unit           : {q.unit_label()}")
+        print(f"  In SI base units  : {q.base_form}")
+        print(f"  Dimensional form. : {q.dimension}")
+        print(f"  CGS unit          : {q.cgs}")
+        print(f"  Formula / Meaning : {q.formula}")
+        print(f"  Topic             : {q.topic}")
+
+        same = [other.name for other in self.with_dimension(q.dimension, q)]
+        if same:
+            print(f"  Same dimensions as: {', '.join(same)}")
+        print("  " + "=" * 58)
 
 
     def show_table(self, quantities):
