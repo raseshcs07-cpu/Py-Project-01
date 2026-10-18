@@ -706,7 +706,8 @@ class PhysicsLibrary:
 
 
     def by_topic(self, topic):
-        return [q for q in self.quantities if q.topic == topic]
+        return [q for q in self.quantities 
+                    if q.topic == topic]
 
 
 
@@ -716,6 +717,7 @@ class PhysicsLibrary:
 
 
     def show_details(self, q):
+
         print("\n  " + "=" * 58)
         print(f"  Quantity          : {q.name}   (symbol: {q.symbol})")
         print(f"  SI unit           : {q.unit_label()}")
@@ -732,43 +734,426 @@ class PhysicsLibrary:
 
 
     def show_table(self, quantities):
+        print(f"\n {'Quantity':<34}{'SI unit':<18}Dimension")
+        print("  " + "-"*74)
+        for q in quantities:
+            print(f" {q.name:<34}{q.unit_symbol:<18}{q.dimension}")
 
 
     def load_data(self):
 
+        add = self.add
+        D = Dimension
+
+        # ===== BASE QUANTITIES =====
+        add("Length", "l", "meter", "m", "m", D(L=1),
+            "Distance between two points", BASE, "centimeter (cm)",
+            aliases=["distance", "displacement", "height", "width", "radius"])
+        
+        add("Mass", "m", "kilogram", "kg", "kg", D(M=1),
+            "Amount of matter in a body", BASE, "gram (g)")
+        
+        add("Time", "t", "second", "s", "s", D(T=1),
+            "Duration between two events", BASE, "second (s)",
+            aliases=["duration", "time period"])
+        
+        add("Electric current", "I", "ampere", "A", "A", D(A=1),
+            "I = q / t", BASE, "abampere / statampere", aliases=["current"])
+        
+        add("Temperature", "T", "kelvin", "K", "K", D(K=1),
+            "T(K) = T(C) + 273.15", BASE, "kelvin (K)")
+        
+        add("Amount of substance", "n", "mole", "mol", "mol", D(mol=1),
+            "n = N / N_A  (N_A = Avogadro number)", BASE, "mole (mol)")
+        
+        add("Luminous intensity", "I_v", "candela", "cd", "cd", D(cd=1),
+            "Light power per unit solid angle", BASE, "candela (cd)")
+        
+
+        # ===== MECHANICS =====
+        add("Area", "A", "square meter", "m^2", "m^2", D(L=2),
+            "A = l x b", MECH, "cm^2")
+        
+        add("Volume", "V", "cubic meter", "m^3", "m^3", D(L=3),
+            "V = l x b x h", MECH, "cm^3")
+        
+        add("Velocity", "v", "meter per second", "m/s", "m s^-1",
+            D(L=1, T=-1), "v = displacement / time", MECH, "cm/s",
+            aliases=["speed"])
+        
+        add("Acceleration", "a", "meter per second squared", "m/s^2",
+            "m s^-2", D(L=1, T=-2), "a = change in velocity / time", MECH,
+            "cm/s^2 (gal)")
+        
+        add("Momentum", "p", "kilogram meter per second", "kg m/s",
+            "kg m s^-1", D(M=1, L=1, T=-1), "p = m x v", MECH, "g cm/s")
+        
+        add("Force", "F", "newton", "N", "kg m s^-2", D(M=1, L=1, T=-2),
+            "F = m x a", MECH, "dyne", aliases=["weight", "thrust"])
+        
+        add("Impulse", "J", "newton second", "N s", "kg m s^-1",
+            D(M=1, L=1, T=-1), "Impulse = F x t = change in momentum", MECH,
+            "dyne s")
+        
+        add("Work", "W", "joule", "J", "kg m^2 s^-2", D(M=1, L=2, T=-2),
+            "W = F x d x cos(theta)", MECH, "erg")
+        
+        add("Energy", "E", "joule", "J", "kg m^2 s^-2", D(M=1, L=2, T=-2),
+            "KE = 1/2 m v^2 ;  PE = m g h", MECH, "erg",
+            aliases=["kinetic energy", "potential energy"])
+        
+        add("Power", "P", "watt", "W", "kg m^2 s^-3", D(M=1, L=2, T=-3),
+            "P = W / t", MECH, "erg/s")
+        
+        add("Torque", "tau", "newton meter", "N m", "kg m^2 s^-2",
+            D(M=1, L=2, T=-2), "tau = r x F", MECH, "dyne cm",
+            aliases=["moment of force"])
+        
+        add("Moment of inertia", "I", "kilogram square meter", "kg m^2",
+            "kg m^2", D(M=1, L=2), "I = m r^2", MECH, "g cm^2")
+        
+        add("Angular velocity", "omega", "radian per second", "rad/s",
+            "s^-1", D(T=-1), "omega = angle / time", MECH, "rad/s",
+            aliases=["angular frequency"])
+        
+        add("Angular acceleration", "alpha", "radian per second squared",
+            "rad/s^2", "s^-2", D(T=-2), "alpha = change in omega / time", MECH,
+            "rad/s^2")
+        
+        add("Angular momentum", "L", "kilogram square meter per second",
+            "kg m^2/s", "kg m^2 s^-1", D(M=1, L=2, T=-1),
+            "L = I x omega = r x p", MECH, "g cm^2/s")
+        
+        add("Density", "rho", "kilogram per cubic meter", "kg/m^3",
+            "kg m^-3", D(M=1, L=-3), "rho = mass / volume", MECH, "g/cm^3")
+        
+        add("Spring constant", "k", "newton per meter", "N/m", "kg s^-2",
+            D(M=1, T=-2), "F = k x", MECH, "dyne/cm",
+            aliases=["force constant"])
+        
+        add("Gravitational constant", "G", "newton meter squared per kg squared",
+            "N m^2/kg^2", "kg^-1 m^3 s^-2", D(M=-1, L=3, T=-2),
+            "F = G m1 m2 / r^2", MECH, "dyne cm^2/g^2")
+        
+        add("Gravitational potential", "V_g", "joule per kilogram", "J/kg",
+            "m^2 s^-2", D(L=2, T=-2), "V = - G M / r", MECH, "erg/g")
+        
+        add("Plane angle", "theta", "radian", "rad", "m/m (ratio)", D(),
+            "theta = arc length / radius", MECH, "degree")
+        
+        add("Solid angle", "omega", "steradian", "sr", "m^2/m^2 (ratio)", D(),
+            "omega = area / r^2", MECH, "-")
 
 
-class History;
+        # ===== PROPERTIES OF MATTER =====
+        add("Pressure", "P", "pascal", "Pa", "kg m^-1 s^-2",
+            D(M=1, L=-1, T=-2), "P = F / A", MATTER, "barye (dyne/cm^2)")
+        
+        add("Stress", "sigma", "pascal", "Pa", "kg m^-1 s^-2",
+            D(M=1, L=-1, T=-2), "Stress = F / A", MATTER, "dyne/cm^2")
+        
+        add("Strain", "epsilon", "no unit", "-", "-", D(),
+            "Strain = change in length / original length", MATTER, "-")
+        
+        add("Young's modulus", "Y", "pascal", "Pa", "kg m^-1 s^-2",
+            D(M=1, L=-1, T=-2), "Y = stress / strain", MATTER, "dyne/cm^2",
+            aliases=["modulus of elasticity"])
+        
+        add("Bulk modulus", "B", "pascal", "Pa", "kg m^-1 s^-2",
+            D(M=1, L=-1, T=-2), "B = - P / (change in V / V)", MATTER,
+            "dyne/cm^2")
+        
+        add("Modulus of rigidity", "eta", "pascal", "Pa", "kg m^-1 s^-2",
+            D(M=1, L=-1, T=-2), "eta = shear stress / shear strain", MATTER,
+            "dyne/cm^2", aliases=["shear modulus"])
+        
+        add("Poisson's ratio", "sigma", "no unit", "-", "-", D(),
+            "sigma = lateral strain / longitudinal strain", MATTER, "-")
+        
+        add("Surface tension", "S", "newton per meter", "N/m", "kg s^-2",
+            D(M=1, T=-2), "S = F / l", MATTER, "dyne/cm")
+        
+        add("Surface energy", "-", "joule per square meter", "J/m^2",
+            "kg s^-2", D(M=1, T=-2), "Energy / area", MATTER, "erg/cm^2")
+        
+        add("Coefficient of viscosity", "eta", "pascal second", "Pa s",
+            "kg m^-1 s^-1", D(M=1, L=-1, T=-1), "F = eta A (dv/dx)", MATTER,
+            "poise", aliases=["viscosity"])
+        
+
+        # ===== HEAT & THERMODYNAMICS =====
+        add("Heat", "Q", "joule", "J", "kg m^2 s^-2", D(M=1, L=2, T=-2),
+            "Q = m c (change in T)", HEAT, "calorie (cal)",
+            aliases=["thermal energy"])
+        
+        add("Heat capacity", "C", "joule per kelvin", "J/K",
+            "kg m^2 s^-2 K^-1", D(M=1, L=2, T=-2, K=-1), "C = Q / change in T",
+            HEAT, "cal/C")
+        
+        add("Specific heat capacity", "c", "joule per kilogram kelvin",
+            "J/(kg K)", "m^2 s^-2 K^-1", D(L=2, T=-2, K=-1),
+            "c = Q / (m x change in T)", HEAT, "cal/(g C)",
+            aliases=["specific heat"])
+        
+        add("Latent heat", "L", "joule per kilogram", "J/kg", "m^2 s^-2",
+            D(L=2, T=-2), "L = Q / m", HEAT, "cal/g")
+        
+        add("Thermal conductivity", "K", "watt per meter kelvin", "W/(m K)",
+            "kg m s^-3 K^-1", D(M=1, L=1, T=-3, K=-1),
+            "Q/t = K A (change in T) / d", HEAT, "cal/(s cm C)")
+        
+        add("Entropy", "S", "joule per kelvin", "J/K", "kg m^2 s^-2 K^-1",
+            D(M=1, L=2, T=-2, K=-1), "change in S = Q / T", HEAT, "erg/K")
+        
+        add("Universal gas constant", "R", "joule per mole kelvin",
+            "J/(mol K)", "kg m^2 s^-2 K^-1 mol^-1",
+            D(M=1, L=2, T=-2, K=-1, mol=-1), "PV = n R T", HEAT,
+            "erg/(mol K)", aliases=["gas constant"])
+        
+        add("Boltzmann constant", "k_B", "joule per kelvin", "J/K",
+            "kg m^2 s^-2 K^-1", D(M=1, L=2, T=-2, K=-1), "E = k_B T", HEAT,
+            "erg/K")
+        
+        add("Coefficient of linear expansion", "alpha", "per kelvin", "K^-1",
+            "K^-1", D(K=-1), "alpha = change in L / (L x change in T)", HEAT,
+            "C^-1")
+        
+        add("Stefan-Boltzmann constant", "sigma", "watt per sq meter per K^4",
+            "W/(m^2 K^4)", "kg s^-3 K^-4", D(M=1, T=-3, K=-4),
+            "P = sigma A T^4", HEAT, "erg/(s cm^2 K^4)")
+        
+
+        # ===== ELECTRICITY =====
+        add("Electric charge", "q", "coulomb", "C", "A s", D(A=1, T=1),
+            "q = I x t", ELEC, "statcoulomb (esu)", aliases=["charge"])
+        
+        add("Potential difference", "V", "volt", "V", "kg m^2 s^-3 A^-1",
+            D(M=1, L=2, T=-3, A=-1), "V = W / q", ELEC, "statvolt",
+            aliases=["voltage", "potential", "electric potential"])
+        
+        add("Electromotive force", "emf", "volt", "V", "kg m^2 s^-3 A^-1",
+            D(M=1, L=2, T=-3, A=-1), "emf = - d(flux)/dt", ELEC, "statvolt",
+            aliases=["emf"])
+        
+        add("Resistance", "R", "ohm", "ohm", "kg m^2 s^-3 A^-2",
+            D(M=1, L=2, T=-3, A=-2), "R = V / I", ELEC, "statohm")
+        
+        add("Impedance", "Z", "ohm", "ohm", "kg m^2 s^-3 A^-2",
+            D(M=1, L=2, T=-3, A=-2), "Z = V_rms / I_rms (AC)", ELEC, "statohm",
+            aliases=["reactance"])
+        
+        add("Resistivity", "rho", "ohm meter", "ohm m", "kg m^3 s^-3 A^-2",
+            D(M=1, L=3, T=-3, A=-2), "R = rho x l / A", ELEC, "ohm cm",
+            aliases=["specific resistance"])
+        
+        add("Conductance", "G", "siemens", "S", "kg^-1 m^-2 s^3 A^2",
+            D(M=-1, L=-2, T=3, A=2), "G = 1 / R", ELEC, "-", aliases=["mho"])
+        
+        add("Electrical conductivity", "sigma", "siemens per meter", "S/m",
+            "kg^-1 m^-3 s^3 A^2", D(M=-1, L=-3, T=3, A=2), "sigma = 1 / rho",
+            ELEC, "-")
+        
+        add("Capacitance", "C", "farad", "F", "kg^-1 m^-2 s^4 A^2",
+            D(M=-1, L=-2, T=4, A=2), "C = q / V", ELEC, "statfarad")
+        
+        add("Electric field", "E", "volt per meter (or N/C)", "V/m",
+            "kg m s^-3 A^-1", D(M=1, L=1, T=-3, A=-1), "E = F / q", ELEC,
+            "dyne/statcoulomb", aliases=["electric field intensity"])
+        
+        add("Electric flux", "phi_E", "volt meter", "V m", "kg m^3 s^-3 A^-1",
+            D(M=1, L=3, T=-3, A=-1), "phi = E A cos(theta)", ELEC, "-")
+        
+        add("Permittivity of free space", "eps_0", "farad per meter", "F/m",
+            "kg^-1 m^-3 s^4 A^2", D(M=-1, L=-3, T=4, A=2),
+            "F = q1 q2 / (4 pi eps_0 r^2)", ELEC, "-",
+            aliases=["permittivity"])
+        
+        add("Electric dipole moment", "p", "coulomb meter", "C m", "A s m",
+            D(L=1, T=1, A=1), "p = q x 2a", ELEC, "statcoulomb cm",
+            aliases=["dipole moment"])
+        
+        add("Current density", "J", "ampere per square meter", "A/m^2",
+            "A m^-2", D(L=-2, A=1), "J = I / A", ELEC, "-")
+
+
+        # ===== MAGNETISM & EMI =====
+        add("Magnetic field", "B", "tesla", "T", "kg s^-2 A^-1",
+            D(M=1, T=-2, A=-1), "F = q v B sin(theta)", MAG, "gauss (G)",
+            aliases=["magnetic flux density", "magnetic induction"])
+        
+        add("Magnetic flux", "phi_B", "weber", "Wb", "kg m^2 s^-2 A^-1",
+            D(M=1, L=2, T=-2, A=-1), "phi = B A cos(theta)", MAG,
+            "maxwell (Mx)")
+        
+        add("Inductance", "L", "henry", "H", "kg m^2 s^-2 A^-2",
+            D(M=1, L=2, T=-2, A=-2), "emf = - L (dI/dt)", MAG, "abhenry",
+            aliases=["self inductance", "mutual inductance"])
+        
+        add("Permeability of free space", "mu_0", "henry per meter", "H/m",
+            "kg m s^-2 A^-2", D(M=1, L=1, T=-2, A=-2),
+            "B = mu_0 I / (2 pi r)", MAG, "-", aliases=["permeability"])
+        
+        add("Magnetic dipole moment", "m", "ampere square meter", "A m^2",
+            "A m^2", D(L=2, A=1), "m = N I A", MAG, "erg/gauss")
+        
+        add("Magnetic intensity", "H", "ampere per meter", "A/m", "A m^-1",
+            D(L=-1, A=1), "H = B / mu", MAG, "oersted",
+            aliases=["magnetising field"])
+
+
+        # ===== WAVES & OPTICS =====
+        add("Frequency", "f", "hertz", "Hz", "s^-1", D(T=-1),
+            "f = 1 / T", WAVE, "hertz (Hz)")
+
+        add("Wavelength", "lambda", "meter", "m", "m", D(L=1),
+            "v = f x lambda", WAVE, "angstrom / cm")
+
+        add("Wave number", "k", "per meter", "m^-1", "m^-1", D(L=-1),
+            "wave number = 1 / lambda", WAVE, "cm^-1")
+
+        add("Intensity of wave", "I", "watt per square meter", "W/m^2",
+            "kg s^-3", D(M=1, T=-3), "I = Power / Area", WAVE, "erg/(s cm^2)",
+            aliases=["intensity"])
+
+        add("Power of lens", "P", "dioptre", "D", "m^-1", D(L=-1),
+            "P = 1 / f (f in meters)", WAVE, "-")
+
+        add("Refractive index", "n", "no unit", "-", "-", D(),
+            "n = c / v", WAVE, "-")
+
+        add("Luminous flux", "phi_v", "lumen", "lm", "cd sr", D(cd=1),
+            "Light power as seen by the eye", WAVE, "-")
+
+        add("Illuminance", "E_v", "lux", "lx", "cd sr m^-2", D(L=-2, cd=1),
+            "E = luminous flux / area", WAVE, "phot")
+
+
+        # ===== MODERN PHYSICS =====
+        add("Planck's constant", "h", "joule second", "J s", "kg m^2 s^-1",
+            D(M=1, L=2, T=-1), "E = h x f", MODERN, "erg s",
+            aliases=["planck"])
+
+        add("Work function", "phi_0", "joule (or eV)", "J", "kg m^2 s^-2",
+            D(M=1, L=2, T=-2), "KE_max = h f - phi_0", MODERN, "erg")
+
+        add("Radioactivity", "A", "becquerel", "Bq", "s^-1", D(T=-1),
+            "A = lambda x N", MODERN, "curie (Ci)", aliases=["activity"])
+
+        add("Decay constant", "lambda", "per second", "s^-1", "s^-1", D(T=-1),
+            "N = N0 e^(- lambda t)", MODERN, "s^-1")
+
+        add("Absorbed dose", "D", "gray", "Gy", "m^2 s^-2", D(L=2, T=-2),
+            "D = energy absorbed / mass", MODERN, "rad")
+
+        add("Rydberg constant", "R_H", "per meter", "m^-1", "m^-1", D(L=-1),
+            "1/lambda = R (1/n1^2 - 1/n2^2)", MODERN, "cm^-1")
+
+
+
+class History:
 
     def __init__(self):
+        self.records = []
 
 
-    def add(self,text);
+    def add(self,text):
+        self.records.append(text)
 
 
     def show(self):
 
+        if not self.records:
+            print("\n No History yet.")
+            return
+        print("\n ----- CONVERSION HISTORY")
+        for number, record in enumerate(self.records, start = 1):
+            print(f" {number}. {record}")
+
 
     def clear(self):
+        self.records.clear()
+        print("\n History Cleared.")
 
 
-    def save_to_file(self, filname = "converison_history.txt"):
+    def save_to_file(self, filename = "converison_history.txt"):
+
+        if not self.records:
+            print("\n Nothng to save.")
+            return
+        
+        with open(filename, "w") as file:
+            for record in self.records:
+                file.write(record + "\n")
+        print(f"\n History saved to '{filename}'")
 
 
 
-
+# =====================================================================
+#  PART 4 :  QUIZ
+# =====================================================================
 class PhysicsQuiz:
 
     def __init__(self, library):
+        self.library = library
 
 
     def run(self):
 
+        print("\n ====PHYSICS UNITS & DIMENSIONS QUIZ ====")
+        try:
+            total = int(input("How many Questions? (1-20): "))
+        except ValueError:
+            total = 5
+        total = max(1, min(total,20))
+
+        pool = [q for q in self.library.quantities if q.unit_symbol]
+        chosen = random.sample(pool, total)
+        score = 0
+
+        for number, q in enumerate(chosen, start = 1):
+            if random.choice(["unit", "dimension"]) == "unit":
+                question = f"What is the SI unit of {q.name}?"
+                correct = q.unit_label()
+                wrong_pool = {x.unti_label() for x in pool}
+            else :
+                question = f"What is the dimesnional formula of {q.name}?"
+                correct = str(q.dimesnion)
+                wrong_pool = {str(x.dimesnion) for x in self.libarary.quantities}
+
+        wrong_pool.discard(correct)
+        options = random.sample(sorted(wrong_pool),3) + [correct]
+        random.shuffle(options)
+
+        print(f"\n Q{number}. {question}")
+        for letter, option in zip("abcd", options):
+            print(f"     {letter}) {option}")
+
+        answer = input(" Your answer (a/b/c/d): ").strip().lower()
+        if len(answer) == 1 and answer in "abcd" \
+            and options["abcd".index(answer)] == correct:
+          print(" Correct!")
+          score += 1
+        else:
+            print(f" Wrong. Correct answer: {correct}")
 
 
+        print(f"\n  FINAL SCORE: {score} / {total}")
+        percent = score * 100 / total
+        if percent == 100:
+            print("  Perfect! You really know your units!")
+        elif percent >= 60:
+            print("  Good job! Keep practising.")
+        else:
+            print("  Revise the quantities from option 7 and try again.")
+
+
+
+# =====================================================================
+#  PART 5 :  MAIN APPLICATION
+# =====================================================================
 class UnitConvertorApp:
 
-    def __init__(self):;
+    def __init__(self):
 
 
     def format_number(self, number):
