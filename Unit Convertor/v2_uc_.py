@@ -1114,7 +1114,7 @@ class PhysicsQuiz:
             if random.choice(["unit", "dimension"]) == "unit":
                 question = f"What is the SI unit of {q.name}?"
                 correct = q.unit_label()
-                wrong_pool = {x.unti_label() for x in pool}
+                wrong_pool = {x.unit_label() for x in pool}
             else :
                 question = f"What is the dimesnional formula of {q.name}?"
                 correct = str(q.dimesnion)
@@ -1154,7 +1154,7 @@ class PhysicsQuiz:
 class UnitConvertorApp:
 
     def __init__(self):
-
+lomopqrst
 
     def format_number(self, number):
 
