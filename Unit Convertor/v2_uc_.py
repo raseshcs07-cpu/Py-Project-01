@@ -1154,7 +1154,12 @@ class PhysicsQuiz:
 class UnitConvertorApp:
 
     def __init__(self):
-lomopqrst
+        self.library = ConverterLibrary()
+        self.physics = PhysicsLibrary()
+        self.history = History()
+        self.quiz = PhysicsQuiz(self.physics)
+        self.precision = 6
+
 
     def format_number(self, number):
 
