@@ -1163,17 +1163,115 @@ class UnitConvertorApp:
 
     def format_number(self, number):
 
+        if number == 0:
+            return "0"
+        size = abs(number)
+        if 1e-6 <= size < 1e12:
+            exponent = math.floor(math.log10(size))                       #floor = gif
+            decimals = max(self.precision - 1 - exponent, 0)
+            text = f"{number:.{decimals}f}"
+            if "." in text:
+                text = text.rstrip("0").rstrip(".")
+            return text
+        return format(number, f".{self.precision}g")
+
 
     def get_number(self,message):
+        while True:
+            try:
+                value = float(input(message))
+                if math.isinf(value) or math.isnan(value):
+                    print("    Please enter a normal number.")
+                    continue
+                return value
+            except ValueError:
+                print("    Invalid number .please Try again")
 
 
-    def choose_unit(self, convertor, message):
+    def choose_category(self):
+
+        converters = self.library.converters
+        print("\n Choose a category:")
+        for index in range(0, len(converters),2):
+            left = f"{index + 1:>2}. {converters[index].category}"
+            line = f"   {left:<30}"
+            if index + 1 < len(converters):
+                right = f"{index + 2:.2}. {converters[index + 1].category}"
+                line +=right
+            print(line)
+
+   
+    def choose_unit(self, converter, message):
+
+        while True:
+            text = input(message).strip()
+            if text.lower() == "list":
+                converter.show_units()
+                continue
+
+            symbol = converter.find_symbol(text)
+            if symbol is not None:
+                return symbol
+            print("   unit not found. Type 'list' to see the units.")
 
 
-    def do_converion(self, converter, value, from_unit, to_unit);
+    def do_converion(self, converter, value, from_unit, to_unit):
+        """Convert, print and store in history (used by many menu options)."""
 
+        try:
+            result = converter.convert(value,from_unit, to_unit)
+        except ValueError as error:
+            print(f"  Error: {error}")
+            return
+
+        text = (f"{self.format_number(value)} {from_unit} to "
+                f"{self.format_number(result)} {to_unit}   [{converter.category}]")
+        print(f"\n RESULT -> {text}")
+        print(f"            ({converter.get_name(from_unit)} to"
+              f"{converter.get_name(to_unit)}")
+        self.history.add(text)
+
+
+    def normal_convert(self):
+            
+            converter = self.choose_category()
+            converter.show_units()
+            print("\n  (You can type symbols like 'km' or names like 'kilometer')")
+    
+            value = self.get_number("\n  Enter value: ")
+            from_unit = self.choose_unit(converter, "  From unit: ")
+            to_unit = self.choose_unit(converter, "  To unit  : ")
+            self.do_conversion(converter, value, from_unit, to_unit)
+        
 
     def quick_convert(self):
+
+        print("\n  Type like:   5 feet to inches   |   150 lb to kg")
+        print("               100 c to f          |   2 gb to mb")
+        line = input("  > ").strip().lower()
+
+        parts = line.split(" to ")
+        if len(parts) != 2:
+            print("  Wrong format. Use:  <value> <unit> to <unit>")
+            return
+
+        left = parts[0].split(None, 1)
+        if len(left) != 2:
+            print("  Wrong format. Use:  <value> <unit> to <unit>")
+            return
+
+        try:
+            value = float(left[0])
+        except ValueError:
+            print("  The first part must be a number.")
+            return
+
+        converter, from_unit, to_unit = self.library.find_pair(left[1], parts[1])
+        if converter is None:
+            print("  Those units are unknown or from different categories.")
+            return
+        self.do_conversion(converter, value, from_unit, to_unit)
+        
 
 
     def popular_convert(self):
