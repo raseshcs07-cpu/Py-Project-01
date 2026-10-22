@@ -1215,7 +1215,7 @@ class UnitConvertorApp:
             print("   unit not found. Type 'list' to see the units.")
 
 
-    def do_converion(self, converter, value, from_unit, to_unit):
+    def do_conversion(self, converter, value, from_unit, to_unit):
         """Convert, print and store in history (used by many menu options)."""
 
         try:
@@ -1273,17 +1273,105 @@ class UnitConvertorApp:
         self.do_conversion(converter, value, from_unit, to_unit)
         
 
-
     def popular_convert(self):
+
+        print("\n POPULAR CONVERSIONS")
+        print(" " + "-" * 60)
+        for index in range(0, len(POPULAR), 2):
+            left = f"{index + 1:>2}. {POPULAR[index][0]}"
+            line = f"   {left:<32}"
+            if index + 1 < len(POPULAR):
+                line += f"{index + 2:>2} .{POPULAR[index + 1][0]}"
+            print(line)
+
+        choice = input("\n Enter Number: ").strip()
+        if not (choice.isdigit() and 1 <= int(choice) <= len(POPULAR)):
+            print(" Invalid Choice.")
+            return
+
+        label, unit1, unit2 = POPULAR[int(choice) - 1]
+        converter, from_unit, to_unit = self.library.find_pair(unit1, unit2)
+        value = self.get_number(
+            f"  Enter value in {converter.get_name(from_unit)}: ")
+        self.do_conversion(converter, value, from_unit, to_unit)
 
 
     def convert_to_all(self):
 
+        converter = self.choose_category()
+        converter.show_units()
+
+        value = self.get_number("\n  Enter value: ")
+        from_unit = self.choose_unit(converter, "  From unit: ")
+
+        try:
+            results = converter.convert_to_all(value, from_unit)
+        except ValueError as error:
+            print(f" Error: {error}")
+            return
+
+        print(f"\n {self.format_number(value)} {from_unit} equals : ")
+        print(" " + "-" * 50)
+        for symbol, result in results.items():
+            name = converter.get_name(symbol)
+            print(f"   {self.format_number(result):>18} {symbol:<9} ({name}")
+
+        self.history.add(
+            f"{self.format_number(value)} {from_unit} converted to all "
+            f"{converter.category} units ")
+
 
     def height_converter(self):
 
+        print("\n HEIGHT CONVERTER")
+        print("     1.  Feet & inches -> cm & meters")
+        print("     2.  Centimeters -> feet & inches")
+        choice = input("   Choose: ").strip()
 
-    def fund_quantity(self):
+        if choice == "1":
+            feet = self.get_number("  Feet :")
+            inches = self.get_number("  Inches: ")
+            total_inches = feet * 12 + inches
+            cm = total_inches * 2.54
+            text = (f"{self.format_number(feet)} ft {self.format_number(inches)} in"
+                    f" = {self.format_number(cm)} cm"
+                    f" = {self.format_number(cm / 100)} m")
+        elif choice == "2":
+            cm = self.get_number(" Centimeters: ")
+            total_inches = cm / 2.54
+            feet = int(total_inches // 12)
+            inches = total_inches - feet * 12
+            text = (f"{self.format_number(cm)} cm = {feet} ft "
+                    f"{self.format_number(inches)} in ")     
+        else:
+            print("  Invalid Choice.")           
+            return
+
+        print(f"\n RESULT -> {text}")
+        self.history.add(text + " [Height]")  
+
+
+    def find_quantity(self):
+
+        print("\n PHYSICS QUANTITY FINDER (units + dimension)")
+        print(" Ask like: force | unit of torque | N | joule | dimension of power")
+        print(" Press Enter to go back")
+
+        while True:
+
+            text = input("\n Ask >").strip()
+            if text == "" or text.lower() == "back":
+                return
+
+            results = self.physics.search(text)
+            if not results:
+                print(" Not found. Try another name, or use option 7 to browse.")
+            elif len(results) <= 3:
+                for q in results:
+                    self.physics.show_details(q)
+            else:
+                print(f" {len(results)} matches found. Be more specific: ")
+                self.physics.show_table(results)
 
 
     def browse_topics(self):
