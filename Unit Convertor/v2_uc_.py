@@ -1376,6 +1376,29 @@ class UnitConvertorApp:
 
     def browse_topics(self):
 
+        print("\n  BROWSE PHYSICS QUANTITIES")
+        for number, topic in enumerate(TOPICS, start=1):
+            print(f"    {number}. {topic}")
+        print(f"    {len(TOPICS) + 1}. Show EVERYTHING")
+
+        choice = input("  Choose: ").strip()
+        if not choice.isdigit() or not 1 <= int(choice) <= len(TOPICS) + 1:
+            print("  Invalid choice.")
+            return
+
+        choice = int(choice)
+        if choice == len(TOPICS) + 1:
+            for topic in TOPICS:
+                print(f"\n  >>> {topic.upper()}")
+                self.physics.show_table(self.physics.by_topic(topic))
+        else:
+            topic = TOPICS[choice - 1]
+            print(f"\n  >>> {topic.upper()}")
+            self.physics.show_table(self.physics.by_topic(topic))
+
+        print("\n  Tip: use option 6 to see the formula, CGS unit and more "
+              "for any quantity.")
+
 
     def dimension_calculator(self):
 
