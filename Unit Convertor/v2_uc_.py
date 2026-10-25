@@ -1401,6 +1401,42 @@ class UnitConvertorApp:
 
 
     def dimension_calculator(self):
+        
+        print("\n  DIMENSION CALCULATOR")
+        print("  Multiply or divide two quantities and see the result.")
+        print("  Example:  Force * Length  ->  [M^1 L^2 T^-2]  (= Work/Energy)")
+
+        first = self.physics.find_one(input("\n  First quantity : "))
+        if first is None:
+            print("  Quantity not found.")
+            return
+
+        operation = input("  Operation (* or /): ").strip()
+        if operation not in ("*", "/", "x"):
+            print("  Please type * or /")
+            return
+
+        second = self.physics.find_one(input("  Second quantity: "))
+        if second is None:
+            print("  Quantity not found.")
+            return
+
+        if operation == "/":
+            answer = first.dimension.divide(second.dimension)
+        else:
+            answer = first.dimension.multiply(second.dimension)
+
+        symbol = "/" if operation == "/" else "x"
+        print(f"\n  {first.name} {first.dimension}")
+        print(f"  {symbol} {second.name} {second.dimension}")
+        print(f"  = {answer}")
+
+        matches = self.physics.with_dimension(answer)
+        if matches:
+            names = ", ".join(q.name for q in matches)
+            print(f"\n  This dimension belongs to: {names}")
+        else:
+            print("\n  No quantity in our list has this dimension.")
 
 
     def show_all_units(self):
