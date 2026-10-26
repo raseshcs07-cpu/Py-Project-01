@@ -1441,6 +1441,17 @@ class UnitConvertorApp:
 
     def show_all_units(self):
 
+        choice = input("\n  Enter a category number, or press Enter for ALL: ").strip()
+        converters = self.library.converters
+
+        if choice == "":
+            for converter in converters:
+                converter.show_units()
+        elif choice.isdigit() and 1 <= int(choice) <= len(converters):
+            converters[int(choice) - 1].show_units()
+        else:
+            self.choose_category().show_units()
+
 
     def history_menu(self):
 
