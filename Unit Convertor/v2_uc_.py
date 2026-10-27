@@ -1454,8 +1454,23 @@ class UnitConvertorApp:
 
 
     def history_menu(self):
+        
+        print("\n  HISTORY")
+        print("    1. View history")
+        print("    2. Clear history")
+        print("    3. Save history to file")
+        choice = input("  Choose: ").strip()
 
+        if choice == "1":
+            self.history.show()
+        elif choice == "2":
+            self.history.clear()
+        elif choice == "3":
+            self.history.save_to_file()
+        else:
+            print("  Invalid choice.")
 
+            
     def change_precision(self):
 
 
