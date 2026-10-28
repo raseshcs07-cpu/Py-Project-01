@@ -1473,6 +1473,17 @@ class UnitConvertorApp:
             
     def change_precision(self):
 
+        print(f"\n  Current precision: {self.precision} significant digits")
+        try:
+            new_value = int(input("  Enter new precision (1-15): "))
+            if 1 <= new_value <= 15:
+                self.precision = new_value
+                print("  Precision updated.")
+            else:
+                print("  Please enter a number between 1 and 15.")
+        except ValueError:
+            print("  Invalid input.")
+
 
     def show_menu(self):
 
