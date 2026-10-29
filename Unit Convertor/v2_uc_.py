@@ -1487,6 +1487,27 @@ class UnitConvertorApp:
 
     def show_menu(self):
 
+         print("\n" + "=" * 52)
+         print("            UNIT CONVERTER  -  MAIN MENU")
+         print("=" * 52)
+         print("   CONVERT")
+         print("    1. Convert units (step by step)")
+         print("    2. Quick convert  (e.g. 5 feet to inches)")
+         print("    3. Popular conversions (lb to kg, ft to in ...)")
+         print("    4. Convert to ALL units of a category")
+         print("    5. Height converter (ft/in <-> cm)")
+         print("   PHYSICS: UNITS & DIMENSIONS")
+         print("    6. Find unit & dimension of a quantity")
+         print("    7. Browse quantities topic-wise (11th/12th)")
+         print("    8. Dimension calculator")
+         print("    9. Quiz")
+         print("   OTHER")
+         print("   10. Show all conversion units")
+         print("   11. History")
+         print("   12. Change precision")
+         print("    0. Exit")
+         print("=" * 52)
+
 
     def run(self):
 
