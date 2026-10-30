@@ -1510,6 +1510,24 @@ class UnitConvertorApp:
 
 
     def run(self):
+      
+         print("\n  Welcome to the Ultimate Unit Converter!")
+
+         actions = {
+            "1": self.normal_convert,
+            "2": self.quick_convert,
+            "3": self.popular_convert,
+            "4": self.convert_to_all,
+            "5": self.height_converter,
+            "6": self.find_quantity,
+            "7": self.browse_topics,
+            "8": self.dimension_calculator,
+            "9": self.quiz.run,
+            "10": self.show_all_units,
+            "11": self.history_menu,
+            "12": self.change_precision,
+        }
+
 
 
 if __name__ = "__main__"
