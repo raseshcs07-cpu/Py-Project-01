@@ -1154,11 +1154,12 @@ class PhysicsQuiz:
 class UnitConvertorApp:
 
     def __init__(self):
+
         self.library = ConverterLibrary()
         self.physics = PhysicsLibrary()
         self.history = History()
         self.quiz = PhysicsQuiz(self.physics)
-        self.precision = 6
+        self.precision = 6  
 
 
     def format_number(self, number):
@@ -1190,7 +1191,7 @@ class UnitConvertorApp:
 
     def choose_category(self):
 
-        converters = self.library.converters
+        converters = self.library.convertors
         print("\n Choose a category:")
         for index in range(0, len(converters),2):
             left = f"{index + 1:>2}. {converters[index].category}"
@@ -1527,9 +1528,21 @@ class UnitConvertorApp:
             "11": self.history_menu,
             "12": self.change_precision,
         }
+         
+         while True:
+
+            self.show_menu()
+            choice = input("  Your choice: ").strip()
+
+            if choice == "0":
+                print("\n  Thank you for using Unit Converter. Goodbye!\n")
+                break
+            elif choice in actions:
+                actions[choice]()
+            else:
+                print("\n  Invalid option. Please choose from the menu.")
 
 
-
-if __name__ = "__main__"
-    app = UnitConverterApp()
+if __name__ == "__main__":
+    app = UnitConvertorApp()
     app.run()
