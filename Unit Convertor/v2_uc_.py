@@ -204,7 +204,7 @@ class ConverterLibrary:
 
 
     def add(self, category, base_unit, units):
-        self.convertors.append(convertor(self,category,base_unit,units))
+        self.convertors.append(convertor(category, base_unit, units))
 
 
     def find_pair(self, unit1, unit2):
@@ -259,7 +259,7 @@ class ConverterLibrary:
         })
 
         # ---------------- TEMPERATURE ----------------
-        self.converters.append(TemperatureConverter())
+        self.convertors.append(TemperatureConverter())
 
         # ---------------- AREA ----------------
         self.add("Area", "Square Meter", {
@@ -1115,27 +1115,25 @@ class PhysicsQuiz:
                 question = f"What is the SI unit of {q.name}?"
                 correct = q.unit_label()
                 wrong_pool = {x.unit_label() for x in pool}
-            else :
-                question = f"What is the dimesnional formula of {q.name}?"
-                correct = str(q.dimesnion)
-                wrong_pool = {str(x.dimesnion) for x in self.libarary.quantities}
+            else:
+                question = f"What is the dimensional formula of {q.name}?"
+                correct = str(q.dimension)
+                wrong_pool = {str(x.dimension) for x in self.library.quantities}
 
-        wrong_pool.discard(correct)
-        options = random.sample(sorted(wrong_pool),3) + [correct]
-        random.shuffle(options)
+            wrong_pool.discard(correct)
+            options = random.sample(sorted(wrong_pool), 3) + [correct]
+            random.shuffle(options)
 
-        print(f"\n Q{number}. {question}")
-        for letter, option in zip("abcd", options):
-            print(f"     {letter}) {option}")
+            print(f"\n Q{number}. {question}")
+            for letter, option in zip("abcd", options):
+                print(f"     {letter}) {option}")
 
-        answer = input(" Your answer (a/b/c/d): ").strip().lower()
-        if len(answer) == 1 and answer in "abcd" \
-            and options["abcd".index(answer)] == correct:
-          print(" Correct!")
-          score += 1
-        else:
-            print(f" Wrong. Correct answer: {correct}")
-
+            answer = input(" Your answer (a/b/c/d): ").strip().lower()
+            if len(answer) == 1 and answer in "abcd" and options["abcd".index(answer)] == correct:
+                print(" Correct!")
+                score += 1
+            else:
+                print(f" Wrong. Correct answer: {correct}")
 
         print(f"\n  FINAL SCORE: {score} / {total}")
         percent = score * 100 / total
@@ -1193,15 +1191,20 @@ class UnitConvertorApp:
 
         converters = self.library.convertors
         print("\n Choose a category:")
-        for index in range(0, len(converters),2):
+        for index in range(0, len(converters), 2):
             left = f"{index + 1:>2}. {converters[index].category}"
             line = f"   {left:<30}"
             if index + 1 < len(converters):
-                right = f"{index + 2:.2}. {converters[index + 1].category}"
-                line +=right
+                right = f"{index + 2:>2}. {converters[index + 1].category}"
+                line += right
             print(line)
 
-   
+        while True:
+            choice = input("\n  Select category number: ").strip()
+            if choice.isdigit() and 1 <= int(choice) <= len(converters):
+                return converters[int(choice) - 1]
+            print("  Invalid category number.")
+
     def choose_unit(self, converter, message):
 
         while True:
