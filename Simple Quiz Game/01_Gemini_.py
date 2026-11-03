@@ -11,6 +11,7 @@ except ImportError:
     import select  # Unix/Linux/macOS
 
 
+
 def input_with_timeout(prompt, timeout=15):
     """Gets user input with a countdown timer."""
     print(prompt, end="", flush=True)
