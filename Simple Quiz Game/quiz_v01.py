@@ -999,7 +999,7 @@ while True:
     wrong_answers = 0
     # skipped_answers = 0
 
-    # leaderboard = []
+    leaderboard = []
 
     if user_choose == "1":
         points = 1
