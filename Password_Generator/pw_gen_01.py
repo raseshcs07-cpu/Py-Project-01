@@ -7,6 +7,7 @@ import json
 
 class Pass_Generator:
 
+
     def __init__(self):
         self.password_history= []
         self.lowercase = string.ascii_lowercase
